@@ -13,6 +13,7 @@ class SaveNFC extends StatefulWidget {
 
 class _SaveNFCState extends State<SaveNFC> {
   StepManager stepManager = StepManager(children: []);
+  NFCManager nfcManager = NFCManager();
 
   @override
   void initState() {
@@ -23,6 +24,8 @@ class _SaveNFCState extends State<SaveNFC> {
   }
 
   Widget step1(BuildContext context) {
+    nfcManager.detectTag();
+
     return Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,

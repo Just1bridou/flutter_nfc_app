@@ -17,27 +17,27 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CustomTitle(
+              text: "MyApp",
+            ),
+            CustomButton(
+                text: "Scanner un objet",
+                background: Colors.black87,
+                onPress: () {
+                  print("scan object");
+                })
+          ],
+        ),
       ),
       body: CustomPagePadding(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomTitle(
-                  text: "MyApp",
-                ),
-                CustomButton(
-                    text: "Scanner un objet",
-                    background: Colors.black87,
-                    onPress: () {
-                      print("scan object");
-                    })
-              ],
-            ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 30),
               child: H3(text: "Mes objets"),
