@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
+import 'package:flutter_nfc/components/nfc.dart';
+import 'package:flutter_nfc/pages/save_in_nfc.dart';
 
 class AddObject extends StatefulWidget {
   const AddObject({Key? key}) : super(key: key);
@@ -17,7 +19,6 @@ class _AddObjectState extends State<AddObject> {
 
   @override
   void initState() {
-    print("initstate");
     stepManager.children.add(step1(context));
     stepManager.children.add(step2(context));
     stepManager.children.add(step3(context));
@@ -30,7 +31,11 @@ class _AddObjectState extends State<AddObject> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         H4(text: "1. Préparer un tag NFC vierge"),
-        Text("IMG NFC CARD"),
+        Center(
+            child: SizedBox(
+                width: 200,
+                height: 150,
+                child: Image.asset('assets/images/nfc_illu_2.png'))),
         H4(text: "2. Entrez les données à stocker"),
         Description(
             text:
@@ -139,9 +144,33 @@ class _AddObjectState extends State<AddObject> {
               background: Colors.black87,
               onPress: () {
                 setState(() {
-                  stepManager.next();
+                  stepManager.next(callback: () {
+                    if (_isStr(nameController.text) &&
+                        _isStr(descriptionController.text) &&
+                        _isStr(passwordController.text)) {
+                      NFCObject newObject = NFCObject(
+                          name: nameController.text,
+                          informations: descriptionController.text,
+                          password: passwordController.text);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SaveNFC(
+                                  newObject: newObject,
+                                )),
+                      );
+                    }
+                  });
                 });
               })
         ]));
+  }
+
+  bool _isStr(String value) {
+    if (value == null || value == "") {
+      return false;
+    }
+    return true;
   }
 }

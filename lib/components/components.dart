@@ -79,12 +79,15 @@ class H4 extends StatelessWidget {
 
 class Description extends StatelessWidget {
   final String text;
-  Description({Key? key, required this.text}) : super(key: key);
+  TextAlign? align;
+  Description({Key? key, required this.text, this.align = TextAlign.left})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
+      textAlign: align,
       style: GoogleFonts.varelaRound(
           textStyle: TextStyle(color: Colors.black87, fontSize: 15)),
     );
@@ -218,9 +221,13 @@ class StepManager {
 
   int step = 0;
 
-  void next() {
+  void next({VoidCallback? callback}) {
     if ((children.length - 1) > step) {
       step++;
+    } else {
+      if (callback != null) {
+        callback();
+      }
     }
   }
 
