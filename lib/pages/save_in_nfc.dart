@@ -24,7 +24,12 @@ class _SaveNFCState extends State<SaveNFC> {
   }
 
   Widget step1(BuildContext context) {
-    nfcManager.detectTag();
+    // nfcManager.read();
+    nfcManager.write(widget.newObject, () {
+      setState(() {
+        stepManager.next();
+      });
+    });
 
     return Center(
         child: Column(
@@ -41,14 +46,14 @@ class _SaveNFCState extends State<SaveNFC> {
               text: "Approcher un tag NFC vierge pour sauvegarder les données",
               align: TextAlign.center,
             )),
-        CustomButton(
-            text: "next",
-            background: Colors.black87,
-            onPress: () {
-              setState(() {
-                stepManager.next();
-              });
-            })
+        // CustomButton(
+        //     text: "next",
+        //     background: Colors.black87,
+        //     onPress: () {
+        //       setState(() {
+        //         stepManager.next();
+        //       });
+        //     })
       ],
     ));
   }

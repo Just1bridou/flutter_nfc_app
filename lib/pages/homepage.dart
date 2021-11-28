@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
 import 'package:flutter_nfc/pages/add_object.dart';
+import 'package:flutter_nfc/pages/save_in_nfc.dart';
+import 'package:flutter_nfc/pages/scan.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,7 +30,10 @@ class _HomePageState extends State<HomePage> {
                 text: "Scanner un objet",
                 background: Colors.black87,
                 onPress: () {
-                  print("scan object");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReadNFC()),
+                  );
                 })
           ],
         ),
