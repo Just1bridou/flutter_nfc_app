@@ -7,20 +7,19 @@ import 'package:nfc_manager/nfc_manager.dart';
 
 class NFCObject {
   String name;
-  String informations;
-  // List<Photos>
+  String description;
   String password;
 
   NFCObject(
       {Key? key,
       required this.name,
-      required this.informations,
+      required this.description,
       required this.password});
 
   factory NFCObject.fromJson(Map<dynamic, dynamic> json) {
     return NFCObject(
       name: json['name'],
-      informations: json['informations'],
+      description: json['informations'],
       password: json['password'],
     );
   }
@@ -71,7 +70,7 @@ class NFCManager {
         Uint8List bytesData = Uint8List.fromList(utf8.encode('{"name":"' +
             object.name +
             '", "informations":"' +
-            object.informations +
+            object.description +
             '", "password":"' +
             object.password +
             '"}'));

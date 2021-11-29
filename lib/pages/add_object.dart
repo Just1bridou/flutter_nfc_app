@@ -153,7 +153,7 @@ class _AddObjectState extends State<AddObject> {
                         _isStr(passwordController.text)) {
                       NFCObject newObject = NFCObject(
                           name: nameController.text,
-                          informations: descriptionController.text,
+                          description: descriptionController.text,
                           password: passwordController.text);
 
                       Navigator.push(
