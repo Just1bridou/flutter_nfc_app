@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
 import 'package:flutter_nfc/components/nfc.dart';
+import 'package:flutter_nfc/pages/homepage.dart';
 import 'package:flutter_nfc/pages/save_in_nfc.dart';
 
 class AddObject extends StatefulWidget {
@@ -127,7 +128,13 @@ class _AddObjectState extends State<AddObject> {
             onPressed: () {
               setState(() {
                 if (stepManager.getStep() == 0) {
-                  Navigator.pop(context);
+                  //Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  ).then((_) {
+                    setState(() {});
+                  });
                 } else {
                   stepManager.previous();
                 }

@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class NFCObject {
   String name;
@@ -26,28 +28,6 @@ class NFCObject {
 }
 
 class NFCManager {
-  void detectTag() async {
-    bool isAvailable = await NfcManager.instance.isAvailable();
-
-    if (!checkAvailability(isAvailable)) {
-      return;
-    }
-
-    NfcManager.instance.startSession(
-      onDiscovered: (NfcTag tag) async {
-        Ndef? ndef = Ndef.from(tag);
-
-        if (!checkNdef(ndef)) {
-          return;
-        }
-
-        print("tag compatible");
-
-        // NfcManager.instance.stopSession();
-      },
-    );
-  }
-
   void write(NFCObject object, VoidCallback callback) async {
     print("write");
 
@@ -67,18 +47,27 @@ class NFCManager {
 
         Ndef ndef = isNdef!;
 
-        Uint8List bytesData = Uint8List.fromList(utf8.encode('{"name":"' +
-            object.name +
-            '", "informations":"' +
-            object.description +
-            '", "password":"' +
-            object.password +
-            '"}'));
+        // Uint8List bytesData = Uint8List.fromList(utf8.encode('{"name":"' +
+        //     object.name +
+        //     '", "informations":"' +
+        //     object.description +
+        //     '", "password":"' +
+        //     object.password +
+        //     '"}'));
+        var uuid = Uuid();
+        String newUUID = uuid.v4();
+        Uint8List bytesData = Uint8List.fromList(utf8.encode(newUUID));
 
         if (ndef.isWritable) {
-          ndef.write(
-              new NdefMessage([NdefRecord.createMime("text/json", bytesData)]));
+          ndef.write(new NdefMessage(
+              [NdefRecord.createMime("text/plain", bytesData)]));
 
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          List<String> listObjects = (prefs.getStringList('listObject') ?? []);
+          listObjects.add(newUUID);
+          await prefs.setStringList('listObject', listObjects);
+
+          print((prefs.getStringList('listObject') ?? []));
           print("done");
 
           callback();
@@ -115,11 +104,14 @@ class NFCManager {
 
         var datas = getNfcDatas(readData.records[0]);
 
+        print(datas);
+
         if (datas != null) {
-          var decodeResponse = jsonDecode(datas);
+          // var decodeResponse = jsonDecode(datas);
+          // print(decodeResponse);
           //return decodeResponse[0]["name"];
-          var obj = NFCObject.fromJson(decodeResponse);
-          callback(obj);
+          // var obj = NFCObject.fromJson(decodeResponse);
+          // callback(obj);
         } else {
           return;
         }

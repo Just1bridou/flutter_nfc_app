@@ -28,11 +28,23 @@ class _ReadNFCState extends State<ReadNFC> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: "Scanner"),
-        centerTitle: true,
-        elevation: 0,
-      ),
+          backgroundColor: Colors.transparent,
+          title: AppBarText(text: "Scanner"),
+          centerTitle: true,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              setState(() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                ).then((_) {
+                  setState(() {});
+                });
+              });
+            },
+          )),
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

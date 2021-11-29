@@ -124,7 +124,9 @@ class _SaveNFCState extends State<SaveNFC> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomePage()),
-              );
+              ).then((_) {
+                setState(() {});
+              });
             })
       ],
     ));

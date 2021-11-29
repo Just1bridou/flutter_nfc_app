@@ -37,6 +37,8 @@ dependencies:
   http: ^0.13.4
   google_fonts: ^2.1.0
   nfc_manager: ^3.1.0
+  uuid: ^3.0.5
+  shared_preferences: ^2.0.9
 
 dev_dependencies:
   flutter_test:
