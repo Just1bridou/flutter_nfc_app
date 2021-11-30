@@ -7,6 +7,8 @@ import 'package:flutter_nfc/pages/scan.dart';
 import 'package:flutter_nfc/server/server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'informations.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -16,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ServerManager serverManager = ServerManager();
+  NFCManager nfcManager = NFCManager();
 
   @override
   void initState() {
@@ -133,12 +136,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget objectCard(NFCObject object) {
-    return Container(
-      decoration: BoxDecoration(color: Colors.red),
-      child: Center(
-          child: Description(
-        text: object.name,
-      )),
-    );
+    return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => InformationNFC(
+                      object: object,
+                    )),
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.purple.shade200,
+              borderRadius: BorderRadius.circular(5.0)),
+          child: Center(
+              child: Description(
+            text: object.name,
+          )),
+        ));
   }
 }

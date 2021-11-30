@@ -19,7 +19,7 @@ class _InformationNFCState extends State<InformationNFC> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: AppBarText(text: "Informations"),
+        title: AppBarText(text: widget.object.name),
         centerTitle: true,
         elevation: 0,
       ),
@@ -27,8 +27,9 @@ class _InformationNFCState extends State<InformationNFC> {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Description(text: widget.object.id.toString()),
-          H4(text: widget.object.name),
+          H4(text: "Description"),
+          Description(text: "ID : " + widget.object.id.toString()),
+          //H4(text: widget.object.name),
           Description(text: widget.object.description),
           H4(text: "Photos"),
         ],

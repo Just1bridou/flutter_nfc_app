@@ -41,23 +41,13 @@ class _SaveNFCState extends State<SaveNFC> {
       mainAxisSize: MainAxisSize.max,
       children: [
         SizedBox(
-            width: 250,
-            //height: 150,
-            child: Image.asset('assets/images/nfc_illu_1.png')),
+            width: 250, child: Image.asset('assets/images/nfc_illu_1.png')),
         Padding(
             padding: EdgeInsets.only(top: 20),
             child: Description(
               text: "Approcher un tag NFC vierge pour sauvegarder les données",
               align: TextAlign.center,
             )),
-        // CustomButton(
-        //     text: "next",
-        //     background: Colors.black87,
-        //     onPress: () {
-        //       setState(() {
-        //         stepManager.next();
-        //       });
-        //     })
       ],
     ));
   }
@@ -104,7 +94,7 @@ class _SaveNFCState extends State<SaveNFC> {
       children: [
         H4(text: "Bravo !"),
         Description(
-          text: "[ITEM NAME] est maintenant enregistré",
+          text: widget.newObject.name + " est maintenant enregistré",
           align: TextAlign.center,
         ),
         Padding(
@@ -140,11 +130,27 @@ class _SaveNFCState extends State<SaveNFC> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: AppBarText(text: "Sauvegarder"),
-        centerTitle: true,
-        elevation: 0,
-      ),
+          backgroundColor: Colors.transparent,
+          title: AppBarText(text: "Sauvegarder"),
+          centerTitle: true,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              setState(() {
+                if (stepManager.getStep() == 1 || stepManager.getStep() == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  ).then((_) {
+                    setState(() {});
+                  });
+                } else {
+                  Navigator.pop(context);
+                }
+              });
+            },
+          )),
       body: stepManager.getActual(),
     );
   }

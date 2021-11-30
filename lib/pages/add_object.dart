@@ -12,12 +12,9 @@ class AddObject extends StatefulWidget {
 }
 
 class _AddObjectState extends State<AddObject> {
-  TextEditingController nameController =
-      TextEditingController(text: "object name");
-  TextEditingController descriptionController = TextEditingController(
-      text: "description description description description");
-  TextEditingController passwordController =
-      TextEditingController(text: "password123");
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   StepManager stepManager = StepManager(children: []);
 

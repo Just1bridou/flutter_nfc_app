@@ -23,8 +23,11 @@ class ServerManager {
   Future<NFCObject?> findOneObject(String id) async {
     final response = await http.get(Uri.parse(baseURL + "nfc-objects/" + id));
     var decodeResponse = jsonDecode(response.body);
-
-    return NFCObject.fromJson(decodeResponse);
+    if (decodeResponse['error'] == null) {
+      return NFCObject.fromJson(decodeResponse);
+    } else {
+      return null;
+    }
   }
 
   Future<List<NFCObject>> findAllObjects() async {

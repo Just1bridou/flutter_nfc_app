@@ -68,14 +68,6 @@ class NFCManager {
 
         Ndef ndef = isNdef!;
 
-        // Uint8List bytesData = Uint8List.fromList(utf8.encode('{"name":"' +
-        //     object.name +
-        //     '", "informations":"' +
-        //     object.description +
-        //     '", "password":"' +
-        //     object.password +
-        //     '"}'));
-
         int createdObjectID = await serverManager.createObject(object);
 
         Uint8List bytesData =
@@ -85,16 +77,16 @@ class NFCManager {
           ndef.write(new NdefMessage(
               [NdefRecord.createMime("text/plain", bytesData)]));
 
+          NfcManager.instance.stopSession();
+
           SharedPreferences prefs = await SharedPreferences.getInstance();
           List<String> listObjects = (prefs.getStringList('listObject') ?? []);
           listObjects.add(createdObjectID.toString());
           await prefs.setStringList('listObject', listObjects);
 
-          print((prefs.getStringList('listObject') ?? []));
-          print("done");
-
           callback();
         } else {
+          NfcManager.instance.stopSession();
           print("cant write on tag");
         }
       },
@@ -122,12 +114,9 @@ class NFCManager {
 
         NdefMessage readData = await ndef.read();
 
-        // print("can make read only: " + canMakeReadOnly.toString());
-        // print("is writable: " + ndef.isWritable.toString());
-
         var datas = getNfcDatas(readData.records[0]);
 
-        print(datas);
+        NfcManager.instance.stopSession();
 
         if (datas != null) {
           NFCObject? object = await serverManager.findOneObject(datas);
@@ -135,11 +124,6 @@ class NFCManager {
           if (object != null) {
             callback(object);
           }
-          // var decodeResponse = jsonDecode(datas);
-          // print(decodeResponse);
-          //return decodeResponse[0]["name"];
-          // var obj = NFCObject.fromJson(decodeResponse);
-          // callback(obj);
         } else {
           return;
         }
