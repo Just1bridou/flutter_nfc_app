@@ -2,35 +2,56 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_nfc/server/server.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class NFCObject {
+  int id;
   String name;
   String description;
   String password;
+  String photo_url;
 
   NFCObject(
       {Key? key,
+      required this.id,
       required this.name,
       required this.description,
-      required this.password});
+      required this.password,
+      required this.photo_url});
 
   factory NFCObject.fromJson(Map<dynamic, dynamic> json) {
     return NFCObject(
+      id: json["id"],
       name: json['name'],
-      description: json['informations'],
-      password: json['password'],
+      description: json['description'],
+      photo_url: json['photo_url'] ?? "path",
+      password: "pwd", //json['password'],
     );
   }
 }
 
-class NFCManager {
-  void write(NFCObject object, VoidCallback callback) async {
-    print("write");
+class PayloadNFCObject {
+  String name;
+  String description;
+  String password;
+  String photo_url;
 
+  PayloadNFCObject(
+      {Key? key,
+      required this.name,
+      required this.description,
+      required this.password,
+      required this.photo_url});
+}
+
+class NFCManager {
+  ServerManager serverManager = ServerManager();
+
+  void write(PayloadNFCObject object, VoidCallback callback) async {
     bool isAvailable = await NfcManager.instance.isAvailable();
 
     if (!checkAvailability(isAvailable)) {
@@ -54,9 +75,11 @@ class NFCManager {
         //     '", "password":"' +
         //     object.password +
         //     '"}'));
-        var uuid = Uuid();
-        String newUUID = uuid.v4();
-        Uint8List bytesData = Uint8List.fromList(utf8.encode(newUUID));
+
+        int createdObjectID = await serverManager.createObject(object);
+
+        Uint8List bytesData =
+            Uint8List.fromList(utf8.encode(createdObjectID.toString()));
 
         if (ndef.isWritable) {
           ndef.write(new NdefMessage(
@@ -64,7 +87,7 @@ class NFCManager {
 
           SharedPreferences prefs = await SharedPreferences.getInstance();
           List<String> listObjects = (prefs.getStringList('listObject') ?? []);
-          listObjects.add(newUUID);
+          listObjects.add(createdObjectID.toString());
           await prefs.setStringList('listObject', listObjects);
 
           print((prefs.getStringList('listObject') ?? []));

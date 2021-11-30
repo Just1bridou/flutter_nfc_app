@@ -143,6 +143,7 @@ class _AddObjectState extends State<AddObject> {
           ),
         ),
         body: stepManager.getActual(),
+        bottomSheet: Padding(padding: EdgeInsets.only(bottom: 0.0)),
         floatingActionButton: Footer(children: [
           H4(
               text: "Etape " +
@@ -158,10 +159,11 @@ class _AddObjectState extends State<AddObject> {
                     if (_isStr(nameController.text) &&
                         _isStr(descriptionController.text) &&
                         _isStr(passwordController.text)) {
-                      NFCObject newObject = NFCObject(
+                      PayloadNFCObject newObject = PayloadNFCObject(
                           name: nameController.text,
                           description: descriptionController.text,
-                          password: passwordController.text);
+                          password: passwordController.text,
+                          photo_url: "url");
 
                       Navigator.push(
                         context,

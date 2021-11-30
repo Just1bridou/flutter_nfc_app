@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
+import 'package:flutter_nfc/components/nfc.dart';
 import 'package:flutter_nfc/pages/add_object.dart';
 import 'package:flutter_nfc/pages/save_in_nfc.dart';
 import 'package:flutter_nfc/pages/scan.dart';
+import 'package:flutter_nfc/server/server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,9 +15,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ServerManager serverManager = ServerManager();
+
   @override
   void initState() {
     print("initstate homepage");
+    //serverManager.findAllObjects();
     super.initState();
   }
 
@@ -31,7 +36,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CustomTitle(
-              text: "MyApp",
+              text: "Finder",
             ),
             CustomButton(
                 text: "Scanner un objet",
@@ -54,10 +59,10 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.symmetric(vertical: 30),
               child: H3(text: "Mes objets"),
             ),
-            FutureBuilder<List<String>>(
+            FutureBuilder<List<NFCObject>>(
               future: _getSavedObjects(),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<NFCObject>> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
                     return const Center(
@@ -68,8 +73,7 @@ class _HomePageState extends State<HomePage> {
                     if (snapshot.hasError && snapshot.data != null) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      print(snapshot.data);
-                      if (snapshot.data!.isEmpty) {
+                      if (snapshot.data == null || snapshot.data!.isEmpty) {
                         return Center(
                           child: Description(
                             text: "Aucuns objet enregistré",
@@ -101,14 +105,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<List<String>> _getSavedObjects() async {
+  Future<List<NFCObject>> _getSavedObjects() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return (prefs.getStringList('listObject') ?? []);
-
-    //await prefs.setStringList('listObject', listObject);
+    List<String> idList = prefs.getStringList('listObject') ?? [];
+    List<NFCObject> objectsList = await serverManager.getObjectsList(idList);
+    return objectsList;
   }
 
-  Widget builderObjects(AsyncSnapshot<List<String>> snapshot) {
+  Widget builderObjects(AsyncSnapshot<List<NFCObject>> snapshot) {
     return Column(
       //crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -118,8 +122,8 @@ class _HomePageState extends State<HomePage> {
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 2,
           childAspectRatio: 1,
-          //childAspectRatio: (.7 / 1),
           crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
           children: List.generate(snapshot.data!.length, (index) {
             return objectCard(snapshot.data![index]);
           }),
@@ -128,12 +132,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget objectCard(String id) {
+  Widget objectCard(NFCObject object) {
     return Container(
       decoration: BoxDecoration(color: Colors.red),
-      child: Description(
-        text: id,
-      ),
+      child: Center(
+          child: Description(
+        text: object.name,
+      )),
     );
   }
 }

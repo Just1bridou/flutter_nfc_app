@@ -204,12 +204,15 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 40, right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: children,
+    return Container(
+      decoration: BoxDecoration(color: Colors.red),
+      child: Padding(
+        padding: EdgeInsets.only(left: 40, right: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: children,
+        ),
       ),
     );
   }

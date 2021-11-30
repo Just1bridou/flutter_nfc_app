@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
 import 'package:flutter_nfc/components/nfc.dart';
 import 'package:flutter_nfc/pages/homepage.dart';
+import 'package:flutter_nfc/server/server.dart';
+import 'package:uuid/uuid.dart';
 
 class SaveNFC extends StatefulWidget {
-  final NFCObject newObject;
+  final PayloadNFCObject newObject;
   const SaveNFC({Key? key, required this.newObject}) : super(key: key);
 
   @override
@@ -14,6 +16,7 @@ class SaveNFC extends StatefulWidget {
 class _SaveNFCState extends State<SaveNFC> {
   StepManager stepManager = StepManager(children: []);
   NFCManager nfcManager = NFCManager();
+  ServerManager serverManager = ServerManager();
 
   @override
   void initState() {
@@ -25,6 +28,7 @@ class _SaveNFCState extends State<SaveNFC> {
 
   Widget step1(BuildContext context) {
     // nfcManager.read();
+
     nfcManager.write(widget.newObject, () {
       setState(() {
         stepManager.next();
