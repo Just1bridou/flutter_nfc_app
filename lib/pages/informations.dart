@@ -27,6 +27,7 @@ class _InformationNFCState extends State<InformationNFC> {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Description(text: widget.object.id.toString()),
           H4(text: widget.object.name),
           Description(text: widget.object.description),
           H4(text: "Photos"),

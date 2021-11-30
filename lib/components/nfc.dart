@@ -130,6 +130,11 @@ class NFCManager {
         print(datas);
 
         if (datas != null) {
+          NFCObject? object = await serverManager.findOneObject(datas);
+
+          if (object != null) {
+            callback(object);
+          }
           // var decodeResponse = jsonDecode(datas);
           // print(decodeResponse);
           //return decodeResponse[0]["name"];
