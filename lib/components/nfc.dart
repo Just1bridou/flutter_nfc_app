@@ -110,16 +110,14 @@ class NFCManager {
 
         Ndef ndef = isNdef!;
 
-        final canMakeReadOnly = ndef.additionalData['canMakeReadOnly'] as bool?;
-
         NdefMessage readData = await ndef.read();
 
-        var datas = getNfcDatas(readData.records[0]);
+        var uuid = getNfcDatas(readData.records[0]);
 
         NfcManager.instance.stopSession();
 
-        if (datas != null) {
-          NFCObject? object = await serverManager.findOneObject(datas);
+        if (uuid != null) {
+          NFCObject? object = await serverManager.findOneObject(uuid);
 
           if (object != null) {
             callback(object);
