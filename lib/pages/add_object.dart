@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
 import 'package:flutter_nfc/components/nfc.dart';
 import 'package:flutter_nfc/pages/homepage.dart';
 import 'package:flutter_nfc/pages/save_in_nfc.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddObject extends StatefulWidget {
   const AddObject({Key? key}) : super(key: key);
@@ -18,6 +21,7 @@ class _AddObjectState extends State<AddObject> {
   TextEditingController passwordController = TextEditingController(text: "tt");
 
   StepManager stepManager = StepManager(children: []);
+  late XFile? image;
 
   @override
   void initState() {
@@ -66,26 +70,40 @@ class _AddObjectState extends State<AddObject> {
   }
 
   Widget step2(BuildContext context) {
+    final ImagePicker _picker = ImagePicker();
+    late XFile? image = null;
+
+    void _choose() async {
+      image = await _picker.pickImage(source: ImageSource.camera);
+    }
+
     return CustomPagePadding(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        H4(text: "3. Ajouter des photos de l'objet"),
-        Padding(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          H4(text: "3. Ajouter des photos de l'objet"),
+          Padding(
             padding: EdgeInsets.only(top: 50),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomButton(
-                    text: "Prendre en photo",
-                    background: Colors.black87,
-                    onPress: () {
-                      print("prendre en photo");
-                    })
+                  text: "Prendre en photo",
+                  background: Colors.black87,
+                  onPress: () {
+                    _choose();
+                  }
+                ),
+                image != null ?
+                    Image.file(File(image!.path))
+                    :
+                    const Text("meh")
               ],
-            )),
-      ],
-    ));
+            )
+          ),
+        ],
+      )
+    );
   }
 
   Widget step3(BuildContext context) {
