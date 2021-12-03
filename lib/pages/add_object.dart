@@ -170,6 +170,9 @@ class _AddObjectState extends State<AddObject> {
                                   newObject: newObject,
                                 )),
                       );
+                    } else {
+                      errorDialog(context, "Erreur",
+                          "Tous les champs ne sont pas remplis");
                     }
                   });
                 });

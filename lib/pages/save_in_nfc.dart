@@ -29,7 +29,7 @@ class _SaveNFCState extends State<SaveNFC> {
   Widget step1(BuildContext context) {
     // nfcManager.read();
 
-    nfcManager.read((obj) {
+    nfcManager.read(context, (obj) {
       if (obj != null) {
         _showOverrideDialog(obj, (res) {
           if (res) {
@@ -38,6 +38,8 @@ class _SaveNFCState extends State<SaveNFC> {
                 stepManager.next();
               });
             });
+          } else {
+            _errorDialog();
           }
         });
       } else {
@@ -202,6 +204,30 @@ class _SaveNFCState extends State<SaveNFC> {
                       callback, object.password, passwordController.text);
                 },
                 child: Text('Valider'),
+              )
+            ],
+          );
+        });
+  }
+
+  void _errorDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Erreur'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Description(text: "Une erreur est survenue"),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  _dismissDialog();
+                },
+                child: Text('Ok'),
               )
             ],
           );

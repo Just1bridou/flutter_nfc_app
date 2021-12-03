@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
+import 'package:flutter_nfc/pages/save_in_nfc.dart';
 import 'package:flutter_nfc/server/server.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nfc_manager/nfc_manager.dart';
@@ -56,7 +57,7 @@ class NFCManager {
       VoidCallback callback) async {
     bool isAvailable = await NfcManager.instance.isAvailable();
 
-    if (!checkAvailability(isAvailable)) {
+    if (!checkAvailability(context, isAvailable)) {
       return;
     }
 
@@ -64,7 +65,7 @@ class NFCManager {
       onDiscovered: (NfcTag tag) async {
         Ndef? isNdef = Ndef.from(tag);
 
-        if (!checkNdef(isNdef)) {
+        if (!checkNdef(context, isNdef)) {
           return;
         }
 
@@ -95,10 +96,10 @@ class NFCManager {
     );
   }
 
-  void read(Function(NFCObject?) callback) async {
+  void read(BuildContext context, Function(NFCObject?) callback) async {
     bool isAvailable = await NfcManager.instance.isAvailable();
 
-    if (!checkAvailability(isAvailable)) {
+    if (!checkAvailability(context, isAvailable)) {
       return;
     }
 
@@ -106,7 +107,7 @@ class NFCManager {
       onDiscovered: (NfcTag tag) async {
         Ndef? isNdef = Ndef.from(tag);
 
-        if (!checkNdef(isNdef)) {
+        if (!checkNdef(context, isNdef)) {
           return;
         }
 
@@ -139,17 +140,17 @@ class NFCManager {
     return utf8.decode(record.payload);
   }
 
-  bool checkAvailability(bool available) {
+  bool checkAvailability(BuildContext context, bool available) {
     if (!available) {
-      // OPEN MODAL "PLEASE TURN ON NFC"
+      errorDialog(context, "Erreur", "Veuillez activer le NFC");
       return false;
     }
     return true;
   }
 
-  bool checkNdef(Ndef? ndef) {
+  bool checkNdef(BuildContext context, Ndef? ndef) {
     if (ndef == null) {
-      // Tag is not compatible with NDEF
+      errorDialog(context, "Erreur", "Tag non compatible");
       return false;
     }
     return true;

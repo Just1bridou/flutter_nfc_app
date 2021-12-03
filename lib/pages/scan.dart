@@ -16,7 +16,7 @@ class _ReadNFCState extends State<ReadNFC> {
 
   @override
   Widget build(BuildContext context) {
-    nfcManager.read((object) {
+    nfcManager.read(context, (object) {
       if (object != null) {
         Navigator.push(
           context,
