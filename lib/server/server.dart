@@ -15,8 +15,6 @@ class ServerManager {
 
     var decodeResponse = jsonDecode(response.body);
 
-    print(decodeResponse);
-
     return decodeResponse["id"];
   }
 
@@ -34,8 +32,6 @@ class ServerManager {
     final response = await http.get(Uri.parse(baseURL + "nfc-objects"));
 
     var decodeResponse = jsonDecode(response.body);
-
-    print(decodeResponse);
 
     return List<NFCObject>.from(
         decodeResponse.map((i) => NFCObject.fromJson(i)));
