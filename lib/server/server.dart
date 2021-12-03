@@ -37,7 +37,7 @@ class ServerManager {
     final response =
         await http.delete(Uri.parse(baseURL + "nfc-objects/" + id));
     var decodeResponse = jsonDecode(response.body);
-    print(decodeResponse);
+
     if (decodeResponse['error'] == null) {
       return 200;
     } else {

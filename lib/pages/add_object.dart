@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_nfc/components/camera.dart';
 import 'package:flutter_nfc/components/components.dart';
 import 'package:flutter_nfc/components/nfc.dart';
 import 'package:flutter_nfc/pages/homepage.dart';
@@ -8,7 +9,10 @@ import 'package:flutter_nfc/pages/save_in_nfc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddObject extends StatefulWidget {
-  const AddObject({Key? key}) : super(key: key);
+  AddObject({Key? key, this.step, this.image}) : super(key: key);
+
+  int? step;
+  XFile? image;
 
   @override
   _AddObjectState createState() => _AddObjectState();
@@ -70,40 +74,39 @@ class _AddObjectState extends State<AddObject> {
   }
 
   Widget step2(BuildContext context) {
-    final ImagePicker _picker = ImagePicker();
-    late XFile? image = null;
-
-    void _choose() async {
-      image = await _picker.pickImage(source: ImageSource.camera);
+    void _choose() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CameraApp()),
+      );
     }
 
     return CustomPagePadding(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          H4(text: "3. Ajouter des photos de l'objet"),
-          Padding(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        H4(text: "3. Ajouter des photos de l'objet"),
+        Padding(
             padding: EdgeInsets.only(top: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Center(
+                child: Column(
               children: [
                 CustomButton(
-                  text: "Prendre en photo",
-                  background: Colors.black87,
-                  onPress: () {
-                    _choose();
-                  }
-                ),
-                image != null ?
-                    Image.file(File(image!.path))
-                    :
-                    const Text("meh")
+                    text: "Prendre en photo",
+                    background: Colors.black87,
+                    onPress: () {
+                      _choose();
+                    }),
+                widget.image != null
+                    ? Image.file(
+                        File(widget.image!.path),
+                        width: 200,
+                      )
+                    : Container()
               ],
-            )
-          ),
-        ],
-      )
-    );
+            ))),
+      ],
+    ));
   }
 
   Widget step3(BuildContext context) {
@@ -158,7 +161,9 @@ class _AddObjectState extends State<AddObject> {
             },
           ),
         ),
-        body: stepManager.getActual(),
+        body: widget.step != null
+            ? stepManager.getInt(widget.step!)
+            : stepManager.getActual(),
         bottomSheet: Padding(padding: EdgeInsets.only(bottom: 0.0)),
         floatingActionButton: Footer(children: [
           H4(

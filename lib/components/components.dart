@@ -246,6 +246,10 @@ class StepManager {
   Widget getActual() {
     return children[step];
   }
+
+  Widget getInt(int newStep) {
+    return children[newStep];
+  }
 }
 
 void errorDialog(BuildContext context, String title, String text) {
