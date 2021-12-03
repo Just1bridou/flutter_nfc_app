@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
+import 'package:flutter_nfc/components/gps.dart';
 import 'package:flutter_nfc/pages/save_in_nfc.dart';
 import 'package:flutter_nfc/server/server.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -68,6 +69,10 @@ class NFCManager {
         if (!checkNdef(context, isNdef)) {
           return;
         }
+
+        gps location = new gps();
+
+        print(location.getGPS());
 
         Ndef ndef = isNdef!;
 
