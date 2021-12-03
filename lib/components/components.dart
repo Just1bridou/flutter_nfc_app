@@ -247,3 +247,34 @@ class StepManager {
     return children[step];
   }
 }
+
+class Modale extends StatefulWidget {
+  const Modale({Key? key}) : super(key: key);
+
+  @override
+  _ModaleState createState() => _ModaleState();
+}
+
+class _ModaleState extends State<Modale> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text('Dialog Demo'),
+            ),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {
+                      //_showMaterialDialog();
+                    },
+                    child: Text('Show Material Dialog'),
+                  ),
+                ],
+              ),
+            )));
+  }
+}

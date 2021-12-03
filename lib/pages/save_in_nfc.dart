@@ -29,10 +29,24 @@ class _SaveNFCState extends State<SaveNFC> {
   Widget step1(BuildContext context) {
     // nfcManager.read();
 
-    nfcManager.write(widget.newObject, () {
-      setState(() {
-        stepManager.next();
-      });
+    nfcManager.read((obj) {
+      if (obj != null) {
+        _showOverrideDialog(obj, (res) {
+          if (res) {
+            nfcManager.write(context, widget.newObject, () {
+              setState(() {
+                stepManager.next();
+              });
+            });
+          }
+        });
+      } else {
+        nfcManager.write(context, widget.newObject, () {
+          setState(() {
+            stepManager.next();
+          });
+        });
+      }
     });
 
     return Center(
@@ -153,5 +167,53 @@ class _SaveNFCState extends State<SaveNFC> {
           )),
       body: stepManager.getActual(),
     );
+  }
+
+  void _showOverrideDialog(NFCObject object, Function(bool) callback) {
+    TextEditingController passwordController = TextEditingController();
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Attention'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Description(
+                    text:
+                        "Un object est déja affecté à cette carte, veuillez entrer le mot de passe pour réécrire la carte"),
+                SizedBox(
+                  height: 30,
+                ),
+                TextInput(hint: "Mot de passe", controller: passwordController)
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    callback(false);
+                    _dismissDialog();
+                  },
+                  child: Text('Annuler')),
+              TextButton(
+                onPressed: () {
+                  _checkPassword(
+                      callback, object.password, passwordController.text);
+                },
+                child: Text('Valider'),
+              )
+            ],
+          );
+        });
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
+  }
+
+  _checkPassword(Function(bool) callback, String objectPWD, String inputPWD) {
+    _dismissDialog();
+    callback(objectPWD == inputPWD);
   }
 }

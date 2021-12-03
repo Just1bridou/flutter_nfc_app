@@ -17,13 +17,15 @@ class _ReadNFCState extends State<ReadNFC> {
   @override
   Widget build(BuildContext context) {
     nfcManager.read((object) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => InformationNFC(
-                  object: object,
-                )),
-      );
+      if (object != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => InformationNFC(
+                    object: object,
+                  )),
+        );
+      }
     });
 
     return Scaffold(

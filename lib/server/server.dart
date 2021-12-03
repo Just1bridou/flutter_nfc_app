@@ -20,11 +20,28 @@ class ServerManager {
 
   Future<NFCObject?> findOneObject(String id) async {
     final response = await http.get(Uri.parse(baseURL + "nfc-objects/" + id));
+
+    if (response.body == "Not Found") {
+      return null;
+    }
+
     var decodeResponse = jsonDecode(response.body);
     if (decodeResponse['error'] == null) {
       return NFCObject.fromJson(decodeResponse);
     } else {
       return null;
+    }
+  }
+
+  Future<int> deleteObject(String id) async {
+    final response =
+        await http.delete(Uri.parse(baseURL + "nfc-objects/" + id));
+    var decodeResponse = jsonDecode(response.body);
+    print(decodeResponse);
+    if (decodeResponse['error'] == null) {
+      return 200;
+    } else {
+      return 404;
     }
   }
 

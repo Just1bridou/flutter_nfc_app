@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nfc/components/components.dart';
 import 'package:flutter_nfc/components/nfc.dart';
 import 'package:flutter_nfc/pages/homepage.dart';
+import 'package:flutter_nfc/server/server.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InformationNFC extends StatefulWidget {
   final NFCObject object;
@@ -13,6 +15,7 @@ class InformationNFC extends StatefulWidget {
 
 class _InformationNFCState extends State<InformationNFC> {
   NFCManager nfcManager = NFCManager();
+  ServerManager serverManager = ServerManager();
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +25,14 @@ class _InformationNFCState extends State<InformationNFC> {
         title: AppBarText(text: widget.object.name),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              _deleteObject(widget.object.id.toString());
+            },
+            icon: Icon(Icons.delete),
+          ),
+        ],
       ),
       body: CustomPagePadding(
           child: Column(
@@ -35,5 +46,19 @@ class _InformationNFCState extends State<InformationNFC> {
         ],
       )),
     );
+  }
+
+  _deleteObject(String id) async {
+    serverManager.deleteObject(id);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> listObjects = (prefs.getStringList('listObject') ?? []);
+
+    listObjects.removeWhere((item) => item == id);
+
+    await prefs.setStringList('listObject', listObjects);
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 }

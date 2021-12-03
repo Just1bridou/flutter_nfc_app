@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_nfc/components/components.dart';
 import 'package:flutter_nfc/server/server.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nfc_manager/nfc_manager.dart';
@@ -29,7 +30,7 @@ class NFCObject {
       name: json['name'],
       description: json['description'],
       photo_url: json['photo_url'] ?? "path",
-      password: "pwd", //json['password'],
+      password: json['password'],
     );
   }
 }
@@ -51,7 +52,8 @@ class PayloadNFCObject {
 class NFCManager {
   ServerManager serverManager = ServerManager();
 
-  void write(PayloadNFCObject object, VoidCallback callback) async {
+  void write(BuildContext context, PayloadNFCObject object,
+      VoidCallback callback) async {
     bool isAvailable = await NfcManager.instance.isAvailable();
 
     if (!checkAvailability(isAvailable)) {
@@ -93,7 +95,7 @@ class NFCManager {
     );
   }
 
-  void read(Function(NFCObject) callback) async {
+  void read(Function(NFCObject?) callback) async {
     bool isAvailable = await NfcManager.instance.isAvailable();
 
     if (!checkAvailability(isAvailable)) {
@@ -118,10 +120,10 @@ class NFCManager {
 
         if (uuid != null) {
           NFCObject? object = await serverManager.findOneObject(uuid);
-
-          if (object != null) {
+          callback(object);
+          /*if (object != null) {
             callback(object);
-          }
+          }*/
         } else {
           return;
         }
