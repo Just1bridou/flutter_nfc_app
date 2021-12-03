@@ -32,7 +32,10 @@ class _AddObjectState extends State<AddObject> {
     stepManager.children.add(step1(context));
     stepManager.children.add(step2(context));
     stepManager.children.add(step3(context));
-    super.initState();
+
+    if (widget.step != null) {
+      stepManager.step = widget.step!;
+    }
   }
 
   Widget step1(BuildContext context) {
@@ -161,9 +164,7 @@ class _AddObjectState extends State<AddObject> {
             },
           ),
         ),
-        body: widget.step != null
-            ? stepManager.getInt(widget.step!)
-            : stepManager.getActual(),
+        body: stepManager.getActual(),
         bottomSheet: Padding(padding: EdgeInsets.only(bottom: 0.0)),
         floatingActionButton: Footer(children: [
           H4(
